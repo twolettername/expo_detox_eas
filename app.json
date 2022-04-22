@@ -17,9 +17,11 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.example.expo-detox-eas",
       "supportsTablet": true
     },
     "android": {
+      "package": "com.example.expo_detox_eas",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
