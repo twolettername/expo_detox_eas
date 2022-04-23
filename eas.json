@@ -3,6 +3,18 @@
     "version": ">= 0.51.0"
   },
   "build": {
+    "e2e:debug": {
+      "developmentClient": true,
+      "env": {
+        "EXPO_BUILD_CONFIG": "e2e"
+      },
+      "android": {
+        "withoutCredentials": true
+      },
+      "ios": {
+        "simulator": true
+      }
+    },
     "development": {
       "developmentClient": true,
       "distribution": "internal"

@@ -1,0 +1,60 @@
+name: Run end-to-end tests
+on:
+  push:
+    branches:
+      - main
+  pull_request: # intentionally empty
+
+concurrency:
+  group: ${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+env:
+  NPM_CONFIG_PREFIX: ${{ github.workspace }}/.npm-global
+
+jobs:
+  build-and-run-tests:
+    runs-on: macos-latest
+
+    strategy:
+      matrix:
+        platform: [ios, android]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+          node-version-file: '.nvmrc'
+
+      - uses: actions/cache@v3
+        id: build-app
+        with:
+          key: ${{ matrix.platform }}-${{ github.sha }}-build
+          path: |
+            e2e/builds/**.app
+            e2e/builds/**.apk
+
+      - uses: actions/cache@v3
+        if: steps.build-app.outputs.cache-hit != 'true'
+        id: install-global-packages
+        with:
+          key: ${{ matrix.platform }}-${{ github.sha }}-global-packages
+          path: ${{ github.workspace }}/.npm-global
+
+      - name: Maybe install dependencies for build
+        if: ${{ steps.build-app.outputs.cache-hit != 'true' && steps.install-global-packages.outputs.cache-hit != 'true' }}
+        run: |
+          mkdir $NPM_CONFIG_PREFIX
+          npm install -g expo-cli eas-cli
+          npm install
+          echo $NPM_CONFIG_PREFIX/bin >> $GITHUB_PATH
+
+      - name: Maybe build app
+        if: steps.build-app.outputs.cache-hit != 'true'
+        run: npm run detox:build:${{ matrix.platform }}:debug
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}

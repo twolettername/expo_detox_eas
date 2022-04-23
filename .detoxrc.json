@@ -3,13 +3,15 @@
   "runnerConfig": "e2e/config.json",
   "skipLegacyWorkersInjection": true,
   "apps": {
-    "ios": {
+    "ios:debug": {
       "type": "ios.app",
-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+      "binaryPath": "e2e/builds/ios.app",
+      "build": "eas build --local --platform ios --profile e2e:debug --non-interactive --output e2e/builds/ios.tar.gz && tar -xf e2e/builds/ios.tar.gz"
     },
-    "android": {
+    "android:debug": {
       "type": "android.apk",
-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+      "binaryPath": "e2e/builds/android.apk",
+      "build": "expo prebuild --clean -p android && eas build --local --platform android --profile e2e:debug --non-interactive --output e2e/builds/android.apk"
     }
   },
   "devices": {
@@ -27,13 +29,13 @@
     }
   },
   "configurations": {
-    "ios": {
+    "ios:debug": {
       "device": "simulator",
-      "app": "ios"
+      "app": "ios:debug"
     },
-    "android": {
+    "android:debug": {
       "device": "emulator",
-      "app": "android"
+      "app": "android:debug"
     }
   }
 }
