@@ -58,3 +58,39 @@ jobs:
         run: npm run detox:build:${{ matrix.platform }}:debug
         env:
           EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+
+      - name: Run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          avd-name: 'e2e_emulator'
+          api-level: 30
+          arch: x86_64
+          script: npm run detox:test:${{ matrix.platform }}:debug
+        env:
+          DETOX_ANDROID_AVD: 'e2e_emulator'
+
+      - name: Upload artifacts for review
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-artifacts
+          path: e2e/.artifacts/
+          retention-days: 4 # Accounts for a weekend
+
+      - name: Run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          avd-name: 'e2e_emulator'
+          api-level: 30
+          arch: x86_64
+          script: npm run detox:test:${{ matrix.platform }}:debug
+        env:
+          DETOX_ANDROID_AVD: 'e2e_emulator'
+
+      - name: Upload artifacts for review
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: detox-artifacts
+          path: e2e/.artifacts/
+          retention-days: 4 # Accounts for a weekend
