@@ -4,7 +4,7 @@ set -e
 
 expo prebuild --clean -p android
 
-eas build --local --platform android --profile e2e:debug --non-interactive --output e2e/builds/android.apk
+eas build --local --platform android --profile e2e:debug --non-interactive --output e2e/builds/android-debug.apk
 
 pushd android
 
@@ -16,13 +16,12 @@ pushd android
   -Pandroid.injected.signing.key.alias="androiddebugkey" \
   -Pandroid.injected.signing.key.password="android"
 
-popd android
+popd
 
-echo "BIG LS BELOW!!!!"
+ls "$PWD/android/app/build/outputs/apk/androidTest/debug/"
+echo "LS RESULT ^^"
 
-ls "$PWD/app/build/outputs/apk/androidTest"
+ls "$GITHUB_WORKSPACE/e2e/builds/"
+echo "LS REUSLT ^^^^^^"
 
-
-echo "BIG LS ABOVEEEE!!!!"
-
-mv "$PWD/app/build/outputs/apk/androidTest/*.apk" e2e/builds/
+mv "$PWD/android/app/build/outputs/apk/androidTest/debug/*" "$GITHUB_WORKSPACE/e2e/builds/"

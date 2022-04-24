@@ -38,8 +38,9 @@ module.exports = {
     },
     "android:debug": {
       type: "android.apk",
-      binaryPath: "e2e/builds/android.apk",
-      build: "bash scripts/build-android.sh"
+      binaryPath: "e2e/builds/android-debug.apk",
+      testBinaryPath: "e2e/builds/app-debug-androidTest.apk",
+      build: "chmod +x scripts/build-android.sh && ./scripts/build-android.sh"
     }
   },
   devices: {

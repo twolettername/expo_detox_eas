@@ -18,7 +18,7 @@ jobs:
 
     strategy:
       matrix:
-        platform: [ios, android]
+        platform: [android]
 
     steps:
       - uses: actions/checkout@v3
